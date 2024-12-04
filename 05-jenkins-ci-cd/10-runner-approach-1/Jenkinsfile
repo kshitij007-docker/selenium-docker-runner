@@ -1,0 +1,42 @@
+pipeline
+{
+ agent {
+    label 'echo'
+ }
+
+ stages 
+ {
+     stage('stage-1')
+     {
+        steps 
+        {
+            echo "doing maven clean"
+            echo "doing maven package"
+        }
+
+     }
+
+     stage('stage-2')
+     {
+        steps{
+            echo "building docker image"
+        }
+     }
+
+     stage('stage-3')
+     {
+        steps{
+            echo "pushing docker image"
+        }
+     }
+
+ }
+
+ post
+ {
+    always 
+    {
+        echo "doing clean up"
+    }
+ }
+}

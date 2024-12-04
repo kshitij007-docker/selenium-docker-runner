@@ -1,0 +1,48 @@
+version: "3"
+services:
+  hub: 
+    image: selenium/hub
+  chrome: 
+    image: selenium/node-chrome
+    shm_size: '2g' #This we are using as browsers are very heavy objects hence we need to increase its shared memory.If we dnt do this our scripts will crash
+    depends_on:
+    - hub    
+    environment: #this is used so that chrome service would come to knw where its hub is present
+    - SE_EVENT_BUS_HOST=hub
+    - SE_EVENT_BUS_PUBLISH_PORT=4442
+    - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    - SE_ NODE_OVERRIDE_MAX_SESSIONS=true #By default concurrency of a service is 1 to increase concurrency we need to add this environment variable
+    - SE_NODE_MAX_SESSIONS=4 #It will override now concurrency to 4
+  firefox: 
+    image: selenium/node-firefox
+    shm_size: '2g'
+    depends_on:
+    - hub
+    environment: #this is used so that Firefox service would come to knw where its hub is present
+    - SE_EVENT_BUS_HOST=hub
+    - SE_EVENT_BUS_PUBLISH_PORT=4442
+    - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    - SE_ NODE_OVERRIDE_MAX_SESSIONS=true #By default concurrency of a service is 1 to increase concurrency we need to add this environment variable
+    - SE_NODE_MAX_SESSIONS=4 #It will override now concurrency to 4
+  vendor-portal:
+   image: kshitijk001/seleniumk
+   depends_on:
+   - chrome
+   environment:
+   - BROWSER=chrome
+   - HUB_HOST=hub #Here we dnt have to provide IP address since this service is part of network we can directly provide 'hub'
+   - THREAD_COUNT=3
+   - TEST_SUITE=vendor-portal.xml
+   volumes:
+   - ./output/vendor-portal:/home/selenium-docker/test-output #Here test-output present in selenium-docker image is mapped to ./output/vendor-portal in local
+  flight-reservation:
+   image: kshitijk001/seleniumk
+   depends_on:
+   - firefox
+   environment:
+   - BROWSER=firefox
+   - HUB_HOST=hub #Here we dnt have to provide IP address since this service is part of network we can directly provide 'hub'
+   - THREAD_COUNT=2
+   - TEST_SUITE=flight-reservationJson.xml
+   volumes:
+   - ./output/flight-reservation:/home/selenium-docker/test-output
