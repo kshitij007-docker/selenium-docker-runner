@@ -1,42 +1,27 @@
 pipeline
 {
- agent {
-    label 'echo'
- }
+ agent any
 
  stages 
  {
-     stage('stage-1')
+     stage('Run test')
      {
         steps 
         {
-            echo "doing maven clean"
-            echo "doing maven package"
+            sh "docker-compose up"
         }
 
      }
 
-     stage('stage-2')
+     stage('Bring Grid Down')
      {
         steps{
-            echo "building docker image"
+            sh "docker-compose up"
         }
      }
 
-     stage('stage-3')
-     {
-        steps{
-            echo "pushing docker image"
-        }
-     }
+    
 
  }
 
- post
- {
-    always 
-    {
-        echo "doing clean up"
-    }
- }
 }
