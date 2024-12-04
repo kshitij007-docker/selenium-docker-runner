@@ -1,0 +1,21 @@
+version: "3"
+services:
+  hub: 
+    image: selenium/hub
+  chrome: 
+    image: selenium/node-chrome
+    shm_size: '2g' #This we are using as browsers are very heavy objects hence we need to increase its shared memory.If we dnt do this our scripts will crash
+    depends_on:
+    - hub
+    deploy: #We will use this option in case we only want to use firefox / chrome we can scale it.just to avoid running unnecessary containers
+      replicas: 1
+    env_file: .env #Here we are saying fetch values of environment variable from .env file
+  firefox: 
+    image: selenium/node-firefox
+    shm_size: '2g'
+    depends_on:
+    - hub
+    deploy: #We will use this option in case we only want to use firefox / chrome we can scale it.just to avoid running unnecessary containers
+      replicas: 1
+    env_file: .env #Here we are saying fetch values of environment variable from .env file
+    

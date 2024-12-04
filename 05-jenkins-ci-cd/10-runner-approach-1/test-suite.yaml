@@ -1,0 +1,20 @@
+version: "3"
+services:
+  vendor-portal:
+   image: kshitijk001/seleniumk
+   environment:
+   - BROWSER=chrome
+   - HUB_HOST=hub #Here we dnt have to provide IP address since this service is part of network we can directly provide 'hub'
+   - THREAD_COUNT=3
+   - TEST_SUITE=vendor-portal.xml
+   volumes:
+   - ./output/vendor-portal:/home/selenium-docker/test-output #Here test-output present in selenium-docker image is mapped to ./output/vendor-portal in local
+  flight-reservation:
+   image: kshitijk001/seleniumk
+   environment:
+   - BROWSER=firefox
+   - HUB_HOST=hub #Here we dnt have to provide IP address since this service is part of network we can directly provide 'hub'
+   - THREAD_COUNT=2
+   - TEST_SUITE=flight-reservationJson.xml
+   volumes:
+   - ./output/flight-reservation:/home/selenium-docker/test-output
