@@ -8,7 +8,8 @@ pipeline
      {
         steps 
         {
-            sh "docker-compose -f grid.yaml up -d"
+            sh "docker-compose -f 05-jenkins-ci-cd/10-runner-approach-1/grid.yaml up -d"
+
         }
 
      }
@@ -17,7 +18,7 @@ pipeline
      {
         steps 
         {
-            sh "docker-compose -f test-suite.yaml up"
+            sh "docker-compose -f 05-jenkins-ci-cd/10-runner-approach-1/test-suite.yaml up"
         }
 
      }
@@ -27,8 +28,8 @@ pipeline
      {
         always
         {
-            sh "docker-compose -f grid.yaml down"
-            sh "docker-compose -f test-suite.yaml down"
+            sh "docker-compose -f 05-jenkins-ci-cd/10-runner-approach-1/grid.yaml down"
+            sh "docker-compose -f 05-jenkins-ci-cd/10-runner-approach-1/test-suite.yaml down"
         }
      }
 
