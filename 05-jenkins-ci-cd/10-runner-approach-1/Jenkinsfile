@@ -28,10 +28,11 @@ pipeline
      {
         always
         {
-            sh "docker-compose -f 05-jenkins-ci-cd/10-runner-approach-1/grid.yaml down"
-            sh "docker-compose -f 05-jenkins-ci-cd/10-runner-approach-1/test-suite.yaml down"
             archiveArtifacts artifacts: '05-jenkins-ci-cd/01-jenkins/volumes/node/workspace/SELENIUM_DOCKER_RUNNER/05-jenkins-ci-cd/10-runner-approach-1/output/flight-reservation/emailable-report.html', followSymlinks: false
             archiveArtifacts artifacts: '05-jenkins-ci-cd/01-jenkins/volumes/node/workspace/SELENIUM_DOCKER_RUNNER/05-jenkins-ci-cd/10-runner-approach-1/output/vendor-portal/emailable-report.html', followSymlinks: false
+            sh "docker-compose -f 05-jenkins-ci-cd/10-runner-approach-1/grid.yaml down"
+            sh "docker-compose -f 05-jenkins-ci-cd/10-runner-approach-1/test-suite.yaml down"
+            
         }
      }
 
