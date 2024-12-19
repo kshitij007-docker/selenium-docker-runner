@@ -13,7 +13,7 @@ pipeline
      {
         steps 
         {
-            sh "docker-compose -f 06-aws-cd/02-aws-runner/grid.yaml up --scale ${params.BROWSER}=1 -d"
+            sh "docker-compose -f 06-aws/02-aws-runner/grid.yaml up --scale ${params.BROWSER}=1 -d"
 
         }
 
@@ -23,7 +23,7 @@ pipeline
      {
         steps 
         {
-            sh "docker-compose -f 06-aws-cd/02-aws-runner/test-suite.yaml up --pull=always"
+            sh "docker-compose -f 06-aws/02-aws-runner/test-suite.yaml up --pull=always"
              script
             {
                 if(fileExists('output/flight-reservation/testng-failed.xml') || fileExists('output/vendor-portal/testng-failed.xml'))
@@ -38,8 +38,8 @@ pipeline
         steps 
         {
             sh 'pwd'
-            sh 'ls -l 06-aws-cd/02-aws-runner/output/flight-reservation/'
-            sh 'ls -l 06-aws-cd/02-aws-runner/output/vendor-portal/'
+            sh 'ls -l 06-aws/02-aws-runner/output/flight-reservation/'
+            sh 'ls -l 06-aws/02-aws-runner/output/vendor-portal/'
             
         }
 
@@ -53,10 +53,10 @@ pipeline
         {
             
             
-            sh "docker-compose -f 06-aws-cd/02-aws-runner/grid.yaml down"
-            sh "docker-compose -f 06-aws-cd/02-aws-runner/test-suite.yaml down"
-            archiveArtifacts artifacts: '06-aws-cd/02-aws-runner/output/flight-reservation/emailable-report.html', followSymlinks: false
-            archiveArtifacts artifacts: '06-aws-cd/02-aws-runner/output/vendor-portal/emailable-report.html', followSymlinks: false
+            sh "docker-compose -f 06-aws/02-aws-runner/grid.yaml down"
+            sh "docker-compose -f 06-aws/02-aws-runner/test-suite.yaml down"
+            archiveArtifacts artifacts: '06-aws/02-aws-runner/output/flight-reservation/emailable-report.html', followSymlinks: false
+            archiveArtifacts artifacts: '06-aws/02-aws-runner/output/vendor-portal/emailable-report.html', followSymlinks: false
             
             
         }
