@@ -1,0 +1,65 @@
+pipeline
+{
+ agent any
+
+ parameters {
+  choice choices: ['chrome', 'firefox'], description: 'Select The Browser', name: 'BROWSER'
+}
+
+
+ stages 
+ {
+     stage('Start grid With 2 chrome or firefox')
+     {
+        steps 
+        {
+            sh "docker-compose -f 06-aws-cd/02-aws-runner/grid.yaml up --scale ${params.BROWSER}=1 -d"
+
+        }
+
+     }
+
+     stage('Start Testsuites')
+     {
+        steps 
+        {
+            sh "docker-compose -f 06-aws-cd/02-aws-runner/test-suite.yaml up --pull=always"
+             script
+            {
+                if(fileExists('output/flight-reservation/testng-failed.xml') || fileExists('output/vendor-portal/testng-failed.xml'))
+                    error('failed tests found')
+            }
+        }
+
+     }
+
+     stage('Check working directory')
+     {
+        steps 
+        {
+            sh 'pwd'
+            sh 'ls -l 06-aws-cd/02-aws-runner/output/flight-reservation/'
+            sh 'ls -l 06-aws-cd/02-aws-runner/output/vendor-portal/'
+            
+        }
+
+     }
+     
+
+     }
+     post 
+     {
+        always
+        {
+            
+            
+            sh "docker-compose -f 06-aws-cd/02-aws-runner/grid.yaml down"
+            sh "docker-compose -f 06-aws-cd/02-aws-runner/test-suite.yaml down"
+            archiveArtifacts artifacts: '06-aws-cd/02-aws-runner/output/flight-reservation/emailable-report.html', followSymlinks: false
+            archiveArtifacts artifacts: '06-aws-cd/02-aws-runner/output/vendor-portal/emailable-report.html', followSymlinks: false
+            
+            
+        }
+     }
+
+}
